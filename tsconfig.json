@@ -12,9 +12,10 @@
             "dom.iterable",
             "esnext"
         ],
-        "resolveJsonModule": true // Add this line
+        "resolveJsonModule": true
     },
     "include": [
-        "src/*"
+        "src/**/*",
+        "*.d.ts" 
     ]
 }

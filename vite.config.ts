@@ -1,11 +1,10 @@
-// vite.config.js
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [tsconfigPaths()],
   resolve: {
-    extension: ['.ts', '.js']
+    extensions: ['.ts', '.js']  // Fixed: 'extension' -> 'extensions'
   },
   build: {
     lib: {

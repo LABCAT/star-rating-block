@@ -11,21 +11,18 @@ interface RatingBlockProps {
 }
 
 class RatingBlock extends HTMLElement implements RatingBlockProps {
+  private _shadowRoot: ShadowRoot;
   public totalStars: number = 5;
   public headingText: string = 'Rate Your Experience';
   public submitText: string = 'Submit Rating';
   public maxChar: number = 4096;
-  private _shadowRoot: ShadowRoot;
-  private debugMode: boolean = false;
-  private onSubmit?: (data: any) => void;
+  public  debugMode: boolean = false;
+  public  onSubmit?: (data: any) => void;
 
   constructor() {
     super();
     this._shadowRoot = this.attachShadow({ mode: 'open' });
-
-    // Check if debug-mode attribute is set
     this.debugMode = this.hasAttribute('debug-mode');
-
     this.render();
   }
 
@@ -35,15 +32,38 @@ class RatingBlock extends HTMLElement implements RatingBlockProps {
 
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
     if (oldValue !== newValue) {
-      const propName = name.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-      this[propName as keyof RatingBlock] = newValue ? Number(newValue) || newValue : newValue;
-      this.render();
+      const propName = name.replace(/-([a-z])/g, (g) => g[1].toUpperCase()) as keyof RatingBlockProps;
+      
+      if (this.isValidProp(propName)) {
+        let value: string | number | boolean | undefined;
+        
+        // Handle different property types
+        switch(propName) {
+          case 'totalStars':
+          case 'maxChar':
+            value = newValue ? Number(newValue) : undefined;
+            break;
+          case 'debugMode':
+            value = newValue !== null;
+            break;
+          default:
+            value = newValue ?? undefined;
+        }
+  
+        // Now we can safely assign the value with the correct type
+        (this[propName] as any) = value;
+        this.render();
+      }
     }
+  }
+  
+  // Update type guard to use RatingBlockProps
+  private isValidProp(prop: string): prop is keyof RatingBlockProps {
+    return ['headingText', 'submitText', 'totalStars', 'maxChar', 'debugMode', 'onSubmit'].includes(prop);
   }
 
   private render(): void {
-    this._shadowRoot.innerHTML =
-      `<style>${styles}</style>${template}`;
+    this._shadowRoot.innerHTML = `<style>${styles}</style>${template}`;
 
     const heading = this._shadowRoot.querySelector('.rating-form__heading');
     if (heading) heading.textContent = this.headingText;
@@ -53,6 +73,13 @@ class RatingBlock extends HTMLElement implements RatingBlockProps {
 
     const starContainer = this._shadowRoot.querySelector('.rating-form__stars');
     if (starContainer) starContainer.innerHTML = this.createStars();
+
+    // Initialize submit button as disabled
+    const submitButton = this._shadowRoot.querySelector('.rating-form__submit') as HTMLButtonElement;
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.setAttribute('aria-disabled', 'true');
+    }
 
     this.setupEventListeners();
   }
@@ -75,12 +102,26 @@ class RatingBlock extends HTMLElement implements RatingBlockProps {
       ).join('');
   }
 
-  private handleStarRatingChange = (e: Event): void => {
-    const submitButton: HTMLButtonElement = this._shadowRoot.querySelector('.rating-form__submit')!;
-    if (e.target instanceof HTMLInputElement) {
-      submitButton.disabled = false;
-      submitButton.removeAttribute('aria-disabled');
+  private updateSubmitButtonState(): void {
+    const submitButton = this._shadowRoot.querySelector('.rating-form__submit') as HTMLButtonElement;
+    const ratingSelected = this._shadowRoot.querySelector('input[name="rating"]:checked');
+
+    if (submitButton) {
+      const isDisabled = !ratingSelected;
+      submitButton.disabled = isDisabled;
+      submitButton.setAttribute('aria-disabled', isDisabled.toString());
+      
+      // Update button style based on state
+      if (isDisabled) {
+        submitButton.classList.add('rating-form__submit--disabled');
+      } else {
+        submitButton.classList.remove('rating-form__submit--disabled');
+      }
     }
+  }
+
+  private handleStarRatingChange = (e: Event): void => {
+    this.updateSubmitButtonState();
   };
 
   private handleCharCountChange = (e: Event): void => {
@@ -93,11 +134,11 @@ class RatingBlock extends HTMLElement implements RatingBlockProps {
   };
 
   private handleSubmit = (event: Event): void => {
-    event.preventDefault(); // Prevent the form submission (page refresh)
-    event.stopImmediatePropagation(); // Prevent bubbling to other listeners (if needed)
+    event.preventDefault();
+    event.stopImmediatePropagation();
 
-    const ratingInput = this._shadowRoot.querySelector('input[name="rating"]:checked');
-    const feedbackInput = this._shadowRoot.querySelector('textarea#feedback');
+    const ratingInput = this._shadowRoot.querySelector('input[name="rating"]:checked') as HTMLInputElement;
+    const feedbackInput = this._shadowRoot.querySelector('textarea#feedback') as HTMLTextAreaElement;
 
     if (ratingInput && feedbackInput) {
       const data = {
@@ -106,10 +147,9 @@ class RatingBlock extends HTMLElement implements RatingBlockProps {
       };
 
       if (this.debugMode) {
-        console.log('Form submitted with data:', data); // Debug log
+        console.log('Form submitted with data:', data);
       }
 
-      // Call the onSubmit callback if defined
       if (this.onSubmit) {
         this.onSubmit(data);
       }
@@ -117,25 +157,26 @@ class RatingBlock extends HTMLElement implements RatingBlockProps {
   };
 
   private setupEventListeners(): void {
-    const form: HTMLFormElement = this._shadowRoot.querySelector('.rating-form');
+    const form = this._shadowRoot.querySelector('.rating-form') as HTMLFormElement;
     if (form) form.addEventListener('submit', this.handleSubmit);
 
-    const starsContainer: HTMLDivElement = this._shadowRoot.querySelector('.rating-form__stars');
+    const starsContainer = this._shadowRoot.querySelector('.rating-form__stars') as HTMLDivElement;
     if (starsContainer) starsContainer.addEventListener('change', this.handleStarRatingChange);
 
-    const feedbackInput: HTMLTextAreaElement = this._shadowRoot.querySelector('textarea#feedback');
-    if (!feedbackInput) {
-      console.warn('Feedback input not found when setting up event listeners.');
-    } else {
+    const feedbackInput = this._shadowRoot.querySelector('textarea#feedback') as HTMLTextAreaElement;
+    if (feedbackInput) {
       feedbackInput.addEventListener('input', this.handleCharCountChange);
     }
+
+    // Initialize submit button state
+    this.updateSubmitButtonState();
   }
 
   disconnectedCallback(): void {
-    const starsContainer: HTMLDivElement = this._shadowRoot.querySelector('.rating-form__stars');
+    const starsContainer = this._shadowRoot.querySelector('.rating-form__stars') as HTMLDivElement;
     if (starsContainer) starsContainer.removeEventListener('change', this.handleStarRatingChange);
 
-    const feedbackInput: HTMLTextAreaElement = this._shadowRoot.querySelector('textarea#feedback');
+    const feedbackInput = this._shadowRoot.querySelector('textarea#feedback') as HTMLTextAreaElement;
     if (feedbackInput) feedbackInput.removeEventListener('input', this.handleCharCountChange);
   }
 }
