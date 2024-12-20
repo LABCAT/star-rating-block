@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,19 +8,23 @@
     <style>
         #app {
           display: flex;
+          flex-direction: column;  /* Added to stack elements vertically */
           justify-content: center;
           align-items: center;
           min-height: 100vh;
           margin: 0;
           padding: 20px;
         }
+        
+        h1 {
+          margin-bottom: 2rem;
+        }
     </style>
 </head>
-
 <body>
-    <!-- Root div where Vite will load the script -->
-    <div id="app"></div>
+    <div id="app">
+        <star-rating-block></star-rating-block>
+    </div>
     <script type="module" src="/src/index.ts"></script>
 </body>
-
 </html>

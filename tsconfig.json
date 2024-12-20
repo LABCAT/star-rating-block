@@ -12,10 +12,23 @@
             "dom.iterable",
             "esnext"
         ],
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "declaration": true,
+        "declarationDir": "./dist",
+        "emitDeclarationOnly": true,
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "allowJs": true,
+        "isolatedModules": true,
+        "experimentalDecorators": true,
+        "useDefineForClassFields": false
     },
     "include": [
         "src/**/*",
-        "*.d.ts" 
+        "*.d.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
     ]
 }

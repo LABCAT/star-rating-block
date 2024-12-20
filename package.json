@@ -1,14 +1,34 @@
 {
   "name": "star-rating-block",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Custom web component for star ratings",
+  "type": "module",
+  "main": "./dist/star-rating-block.es.js",
+  "module": "./dist/star-rating-block.es.js",
+  "types": "./dist/RatingBlock.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/star-rating-block.es.js",
+      "types": "./dist/RatingBlock.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
+    "build:lib": "vite build --mode lib && tsc --emitDeclarationOnly",
+    "build:demo": "vite build",
+    "build": "npm run build:lib && npm run build:demo",
+    "serve": "vite preview",
+    "prepare": "npm run build:lib"
   },
-  "keywords": [],
+  "keywords": [
+    "web-components",
+    "rating",
+    "stars",
+    "custom-elements"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
@@ -17,5 +37,13 @@
     "typescript": "^5.2.2",
     "vite": "^4.4.5",
     "vite-tsconfig-paths": "^4.2.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/star-rating-block.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/star-rating-block/issues"
+  },
+  "homepage": "https://github.com/yourusername/star-rating-block#readme"
 }
