@@ -1,0 +1,43 @@
+<form class="rating-form" role="form" aria-labelledby="rating-title rating-description">
+    <h2 id="rating-title" class="rating-form__heading"></h2>
+    <p id="rating-description" class="rating-form__description visually-hidden">
+        This form allows you to rate your experience and provide feedback. Use arrow keys to navigate between stars,
+        space to select a rating, and tab to move between form sections.
+    </p>
+
+    <fieldset class="rating-form__stars-wrapper">
+        <legend class="rating-form__stars-legend">Rating</legend>
+        <!-- Remove tabindex from container, each radio should be focusable -->
+        <div class="rating-form__stars" role="radiogroup" aria-label="Rate your experience from 1 to 5 stars">
+            <!-- Stars will be dynamically inserted here -->
+        </div>
+        <div class="rating-form__live-region" aria-live="polite" aria-atomic="true"></div>
+    </fieldset>
+
+    <div class="rating-form__feedback">
+        <label for="feedback" class="rating-form__label">
+            Additional Comments
+            <span class="rating-form__label-hint">(optional)</span>
+        </label>
+        <div class="rating-form__textarea-wrapper">
+            <textarea id="feedback" name="feedback" class="rating-form__textarea" maxlength="600"
+                aria-describedby="feedback-hint char-count" placeholder=""></textarea>
+            <div id="feedback-hint" class="rating-form__hint">
+                Share any additional thoughts about your experience
+            </div>
+            <div id="char-count" class="rating-form__char-count" aria-live="polite">
+                0 out of 600 characters used
+            </div>
+        </div>
+    </div>
+
+    <div class="rating-form__submit-wrapper">
+        <button type="submit" class="rating-form__submit" aria-disabled="true">
+            <span class="rating-form__submit-text"></span>
+            <span class="rating-form__loading-text visually-hidden">
+                Submitting your feedback...
+            </span>
+        </button>
+        <div class="rating-form__status" role="status" aria-live="polite"></div>
+    </div>
+</form>

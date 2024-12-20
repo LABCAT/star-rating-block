@@ -1,0 +1,21 @@
+{
+  "name": "star-rating-block",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.6.2",
+    "sass": "^1.83.0",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.5",
+    "vite-tsconfig-paths": "^4.2.0"
+  }
+}
