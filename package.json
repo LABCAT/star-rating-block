@@ -18,10 +18,12 @@
   "scripts": {
     "dev": "vite",
     "build:lib": "vite build --mode lib && tsc --emitDeclarationOnly",
-    "build:demo": "vite build",
-    "build": "npm run build:lib && npm run build:demo",
+    "build:demo": "pnpm run build:lib && vite build",
+    "build": "pnpm run build:lib && pnpm run build:demo",
     "serve": "vite preview",
-    "prepare": "npm run build:lib"
+    "prepare": "pnpm run build:lib",
+    "predeploy": "pnpm run build:demo",
+    "deploy": "gh-pages -d dist/demo --dotfiles -f"
   },
   "keywords": [
     "web-components",
@@ -33,6 +35,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.6.2",
+    "gh-pages": "^6.2.0",
     "sass": "^1.83.0",
     "typescript": "^5.2.2",
     "vite": "^4.4.5",

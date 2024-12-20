@@ -1,31 +1,23 @@
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-// https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   if (mode === 'lib') {
     return {
       plugins: [tsconfigPaths()],
       build: {
         lib: {
-          entry: 'src/RatingBlock.ts',
+          entry: 'src/components/RatingBlock.ts',
           name: 'StarRatingBlock',
           formats: ['es'],
           fileName: (format) => `star-rating-block.${format}.js`
         },
+        outDir: 'dist',
         rollupOptions: {
-          // If you have external dependencies, list them here
           external: [],
           output: {
-            // Provide globals for UMD build if needed
             globals: {}
           }
-        }
-      },
-      css: {
-        modules: false,
-        preprocessorOptions: {
-          scss: {}
         }
       }
     };
@@ -33,19 +25,15 @@ export default defineConfig(({ command, mode }) => {
     // Demo build configuration
     return {
       plugins: [tsconfigPaths()],
-      base: '/star-rating-block/', // This should match your GitHub repo name
+      base: '/star-rating-block/',
       build: {
         outDir: 'dist/demo',
         rollupOptions: {
           input: {
-            main: 'index.html' // Your demo page
-          }
-        }
-      },
-      css: {
-        modules: false,
-        preprocessorOptions: {
-          scss: {}
+            main: 'index.html'
+          },
+          external: ['/dist/star-rating-block.es.js'],
+          preserveEntrySignatures: 'strict'
         }
       }
     };
