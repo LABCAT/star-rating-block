@@ -8,7 +8,8 @@
     <fieldset class="rating-form__stars-wrapper">
         <legend class="rating-form__stars-legend">Rating</legend>
         <!-- Remove tabindex from container, each radio should be focusable -->
-        <div class="rating-form__stars" role="radiogroup" aria-label="Rate your experience from 1 to 5 stars">
+        <div class="rating-form__stars" role="radiogroup" aria-label="Rate your experience from 1 to 5 stars"
+            aria-live="polite">
             <!-- Stars will be dynamically inserted here -->
         </div>
         <div class="rating-form__live-region" aria-live="polite" aria-atomic="true"></div>
@@ -32,7 +33,7 @@
     </div>
 
     <div class="rating-form__submit-wrapper">
-        <button type="submit" class="rating-form__submit" aria-disabled="true">
+        <button type="submit" class="rating-form__submit" aria-disabled="true" aria-label="Submit your rating">
             <span class="rating-form__submit-text"></span>
             <span class="rating-form__loading-text visually-hidden">
                 Submitting your feedback...
